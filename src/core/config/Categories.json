@@ -81,7 +81,6 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding",
             "Thrift Serialize",
             "Thrift Deserialize"
         ]
