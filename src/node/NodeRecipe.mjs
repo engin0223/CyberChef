@@ -88,17 +88,22 @@ class NodeRecipe {
      * @param {NodeDish} dish
      * @returns {NodeDish}
      */
-    async execute(dish) {
-        let prev = dish;
-        for (const curr of this.opList) {
-            if (Object.prototype.hasOwnProperty.call(curr, "op") &&
-                Object.prototype.hasOwnProperty.call(curr, "args")) {
-                prev = await curr.op(prev, curr.args);
-            } else {
-                prev = await curr(prev);
+    execute(dish) {
+        return (async () => {
+            let currentInput = dish;
+
+            for (const curr of this.opList) {
+                // Check if it's an operation object or a direct function
+                if (Object.prototype.hasOwnProperty.call(curr, "op") &&
+                    Object.prototype.hasOwnProperty.call(curr, "args")) {
+                    currentInput = await curr.op(currentInput, curr.args);
+                } else {
+                    currentInput = await curr(currentInput);
+                }
             }
-        }
-        return prev;
+
+            return currentInput;
+        })();
     }
 }
 
