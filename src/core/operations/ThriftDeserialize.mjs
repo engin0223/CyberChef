@@ -313,5 +313,5 @@ class ThriftDeserialize extends Operation {
         return (n >> 1n) ^ -(n & 1n);
     }
 }
-
+ 
 export default ThriftDeserialize;
