@@ -180,15 +180,15 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
     }),
 
-    it("chef.bake: should complain if recipe isnt a valid object", () => {
-        assert.throws(() => chef.bake("some input", 3264), {
+    it("chef.bake: should complain if recipe isnt a valid object", async () => {
+        await assert.rejects(() => chef.bake("some input", 3264), {
             name: "TypeError",
             message: "Recipe can only contain function names or functions"
         });
     }),
 
-    it("chef.bake: Should complain if string op is invalid", () => {
-        assert.throws(() => chef.bake("some input", "not a valid operation"), {
+    it("chef.bake: Should complain if string op is invalid", async () => {
+        await assert.rejects(() => chef.bake("some input", "not a valid operation"), {
             name: "TypeError",
             message: "Couldn't find an operation with name 'not a valid operation'."
         });
@@ -199,8 +199,8 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = help\n");
     }),
 
-    it("chef.bake: Should complain if an invalid operation is inputted", () => {
-        assert.throws(() => chef.bake("https://google.com/search?q=help", () => {}), {
+    it("chef.bake: Should complain if an invalid operation is inputted", async () => {
+        await assert.rejects(() => chef.bake("https://google.com/search?q=help", () => {}), {
             name: "TypeError",
             message: "Inputted function not a Chef operation."
         });
@@ -232,8 +232,8 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
-    it("should complain if an invalid operation is inputted as part of array", () => {
-        assert.throws(() => chef.bake("something", [() => {}]), {
+    it("should complain if an invalid operation is inputted as part of array", async () => {
+        await assert.rejects(() => chef.bake("something", [() => {}]), {
             name: "TypeError",
             message: "Inputted function not a Chef operation."
         });
@@ -264,8 +264,8 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
-    it("chef.bake: should error if op in JSON is not chef op", () => {
-        assert.throws(() => chef.bake("some input", {
+    it("chef.bake: should error if op in JSON is not chef op", async () => {
+        await assert.rejects(() => chef.bake("some input", {
             op: () => {},
             args: ["Colon"],
         }), {
@@ -366,10 +366,7 @@ TestRegister.addApiTests([
             { "op": "Parse ASN.1 hex string",
                 "args": [0, 32] }
         ]);
-        assert.strictEqual(result.toString(), `SEQUENCE
-  INTEGER 05
-  IA5String 'Anybody there?'
-`);
+        assert.strictEqual(result.toString(), `SEQUENCE\n  INTEGER 05\n  IA5String 'Anybody there?'\n`);
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
@@ -381,16 +378,16 @@ TestRegister.addApiTests([
         }
     }),
 
-    it("chef.bake: cannot accept flowControl operations in recipe", () => {
-        assert.throws(() => chef.bake("some input", "magic"), {
+    it("chef.bake: cannot accept flowControl operations in recipe", async () => {
+        await assert.rejects(() => chef.bake("some input", "magic"), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });
-        assert.throws(() => chef.bake("some input", magic), {
+        await assert.rejects(() => chef.bake("some input", magic), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });
-        assert.throws(() => chef.bake("some input", ["to base 64", "magic"]), {
+        await assert.rejects(() => chef.bake("some input", ["to base 64", "magic"]), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });

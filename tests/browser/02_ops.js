@@ -64,7 +64,7 @@ module.exports = {
         testOp(browser, "BSON serialise", '{"a":"test"}', "\u0011\u0000\u0000\u0000\u0002a\u0000\u0005\u0000\u0000\u0000test\u0000\u0000");
         // testOp(browser, "Bacon Cipher Decode", "test input", "test_output");
         // testOp(browser, "Bacon Cipher Encode", "test input", "test_output");
-        testOp(browser, "Bcrypt", "test input", /^\$2a\$06\$.{53}$/, [6]);
+        testOp(browser, "Bcrypt", "test input", /^\$2b\$06\$.{53}$/, [6]);
         testOp(browser, "Bcrypt compare", "test input", "Match: test input", ["$2a$05$FCfBSVX7OeRkK.9kQVFCiOYu9XtwtIbePqUiroD1lkASW9q5QClzG"]);
         testOp(browser, "Bcrypt parse", "$2a$05$kXWtAIGB/R8VEzInoM5ocOTBtyc0m2YTIwFiBU/0XoW032f9QrkWW", /Rounds: 5/);
         testOp(browser, "Bifid Cipher Decode", "qblb tfovy", "test input", ["pass"]);
@@ -268,7 +268,7 @@ module.exports = {
         testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
-        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:last-child td:last-child", "192.168.12.2");
+        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
     // testOp(browser, "Parse QR Code", "test input", "test_output");
@@ -354,6 +354,7 @@ module.exports = {
         // testOp(browser, "Tail", "test input", "test_output");
         // testOp(browser, "Take bytes", "test input", "test_output");
         testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
+        testOp(browser, "Template", "{\"one\": 1, \"two\": 2}", "1 2", ["{{ one }} {{ two }}"]);
         testOpHtml(browser, "Text Encoding Brute Force", "test input", "tr:nth-of-type(4) td:last-child", /t\u2400e\u2400s\u2400t\u2400/);
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");

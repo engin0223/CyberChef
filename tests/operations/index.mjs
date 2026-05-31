@@ -11,11 +11,13 @@
  * @license Apache-2.0
  */
 
+import "../lib/wasmFetchPolyfill.mjs";
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/A1Z26CipherDecode.mjs";
 import "./tests/AESKeyWrap.mjs";
+import "./tests/AnalyseUUID.mjs";
 import "./tests/AlternatingCaps.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/BaconCipher.mjs";
@@ -71,6 +73,7 @@ import "./tests/ExtractAudioMetadata.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
 import "./tests/ExtractIPAddresses.mjs";
+import "./tests/Fernet.mjs";
 import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
@@ -122,6 +125,8 @@ import "./tests/NetBIOS.mjs";
 import "./tests/NormaliseUnicode.mjs";
 import "./tests/NTLM.mjs";
 import "./tests/OTP.mjs";
+import "./tests/ParseEthernetFrame.mjs";
+import "./tests/ParseIPv4Header.mjs";
 import "./tests/ParseIPRange.mjs";
 import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/ParseQRCode.mjs";
@@ -133,6 +138,7 @@ import "./tests/ParseUDP.mjs";
 import "./tests/PEMtoHex.mjs";
 import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
+import "./tests/ParityBit.mjs";
 import "./tests/PHPSerialize.mjs";
 import "./tests/PowerSet.mjs";
 import "./tests/Protobuf.mjs";
@@ -142,6 +148,8 @@ import "./tests/Rabbit.mjs";
 import "./tests/RAKE.mjs";
 import "./tests/Regex.mjs";
 import "./tests/Register.mjs";
+import "./tests/RegularExpression.mjs";
+import "./tests/RenderMarkdown.mjs";
 import "./tests/RisonEncodeDecode.mjs";
 import "./tests/Rotate.mjs";
 import "./tests/RSA.mjs";
@@ -174,6 +182,7 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/Wrap.mjs";
 import "./tests/URLEncodeDecode.mjs";
 import "./tests/RSA.mjs";
 import "./tests/CBOREncode.mjs";
