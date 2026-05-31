@@ -7,7 +7,13 @@
 
 import Operation from "../Operation.mjs";
 
+/**
+ * Operation to encode a JSON structure into Apache Thrift TBinaryProtocol binary format.
+ */
 class ThriftSerialize extends Operation {
+    /**
+     * ThriftSerialize constructor.
+     */
     constructor() {
         super();
         this.name = "Thrift Serialize";
@@ -19,6 +25,13 @@ class ThriftSerialize extends Operation {
         this.args = [];
     }
 
+    /**
+     * Runs the operation.
+     *
+     * @param {string} input
+     * @param {Array} args
+     * @returns {ArrayBuffer}
+     */
     run(input, args) {
         if (!input || input.trim() === "") return new ArrayBuffer(0);
 
@@ -34,6 +47,12 @@ class ThriftSerialize extends Operation {
         return new Uint8Array(bytes).buffer;
     }
 
+    /**
+     * Recursively parses the JSON object to build out the Thrift byte array structure.
+     *
+     * @param {Object} jsonStruct
+     * @param {number[]} bytes
+     */
     buildBinaryStruct(jsonStruct, bytes) {
         const typeMap = { "BOOL": 2, "I8": 3, "DOUBLE": 4, "I16": 6, "I32": 8, "I64": 10, "BINARY": 11, "STRUCT": 12, "MAP": 13, "SET": 14, "LIST": 15 };
 
@@ -58,6 +77,14 @@ class ThriftSerialize extends Operation {
         bytes.push(0); 
     }
 
+    /**
+     * Serializes values into the byte stream according to their specific Thrift types.
+     *
+     * @param {string} typeName
+     * @param {*} value
+     * @param {number[]} bytes
+     * @param {Object} typeMap
+     */
     writeValue(typeName, value, bytes, typeMap) {
         switch (typeName) {
             case "BOOL":
@@ -72,29 +99,32 @@ class ThriftSerialize extends Operation {
             case "I32":
                 bytes.push((value >> 24) & 0xFF, (value >> 16) & 0xFF, (value >> 8) & 0xFF, value & 0xFF);
                 break;
-            case "I64":
+            case "I64": {
                 const bigVal = BigInt(value);
                 for (let i = 7n; i >= 0n; i--) bytes.push(Number((bigVal >> (i * 8n)) & 0xFFn));
                 break;
-            case "DOUBLE":
+            }
+            case "DOUBLE": {
                 // 8 bytes IEEE 754 floating point (Big Endian)
                 const floatView = new DataView(new ArrayBuffer(8));
                 floatView.setFloat64(0, value, false); 
                 for (let i = 0; i < 8; i++) bytes.push(floatView.getUint8(i));
                 break;
-            case "BINARY":
+            }
+            case "BINARY": {
                 const textEncoder = new TextEncoder();
                 const strBytes = textEncoder.encode(value);
                 const len = strBytes.length;
                 bytes.push((len >> 24) & 0xFF, (len >> 16) & 0xFF, (len >> 8) & 0xFF, len & 0xFF);
                 strBytes.forEach(b => bytes.push(b));
                 break;
+            }
             case "STRUCT":
                 // Recursively build nested structs
                 this.buildBinaryStruct(value, bytes);
                 break;
             case "LIST":
-            case "SET":
+            case "SET": {
                 // Expects JSON format: { "elementType": "I32", "elements": [1, 2, 3] }
                 const elType = typeMap[value.elementType];
                 bytes.push(elType); // 1 byte element type
@@ -105,7 +135,8 @@ class ThriftSerialize extends Operation {
                 // Write each element recursively
                 value.elements.forEach(el => this.writeValue(value.elementType, el, bytes, typeMap));
                 break;
-            case "MAP":
+            }
+            case "MAP": {
                 // Expects JSON format: { "keyType": "I32", "valType": "BINARY", "elements": [{"key": 1, "val": "hello"}] }
                 const kType = typeMap[value.keyType];
                 const vType = typeMap[value.valType];
@@ -120,6 +151,7 @@ class ThriftSerialize extends Operation {
                     this.writeValue(value.valType, pair.val, bytes, typeMap);
                 });
                 break;
+            }
             default:
                 throw new Error(`Unsupported serialization type: ${typeName}`);
         }
